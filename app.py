@@ -65,6 +65,8 @@ def handle_message(event: Event):
         # 使用 GPT 生成回應
         if user_message == "附近的餐廳":
             reply_text = get_nearby_restaurants()
+        elif user_message == "課表":
+            reply_text = "這是你的課表~"
         elif user_message == "台積電股票":
             try:
                 image_url = txt_to_img_url()
@@ -90,7 +92,9 @@ def handle_message(event: Event):
                 )
             return
         else:
-            reply_text = ("你說了：" + user_message)
+            response = model.generate_content(user_message) # 傳送使用者的問題給 Gemini
+            reply_text = response.text if response else "抱歉，我無法回答這個問題。"
+
 
         line_bot_api.reply_message(
             event.reply_token,
